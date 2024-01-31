@@ -1,0 +1,252 @@
+import socket
+import threading
+import json
+from game import TicTacToe
+
+HOST = '127.0.0.1'  # The server's hostname or IP address
+PORT = 65432        # The port used by the server
+
+
+class TicTacToe:
+    def __init__(self):
+        self.board = [["" for _ in range(4)] for _ in range(4)]
+        self.init_team_names()
+        pass
+
+    def init_team_names(self):
+        self.board[0][1] = "Team1"
+        self.board[0][2] = "Team2"
+        self.board[0][3] = "Team3"
+        self.board[1][0] = "Country"
+        self.board[2][0] = "feature"
+        self.board[3][0] = "Team6"
+        pass
+
+    def display_board(self):
+        # Placeholder for displaying the game board
+        pass
+
+    def make_move(self, player, row, col):
+        if self.is_valid_move(row, col):
+            self.board[row][col] = player
+            if self.check_winner(player):
+                return "win"
+            return "valid"
+        return "invalid"
+
+    def is_valid_move(self, row, col):
+        return 0 < row < 4 and 0 < col < 4 and self.board[row][col] == ""
+
+    def check_winner(self, player):
+        # Check rows, columns, and diagonals for a win
+        for i in range(1, 4):
+            if all(self.board[i][j] == player for j in range(1, 4)) or \
+               all(self.board[j][i] == player for j in range(1, 4)):
+                return True
+        # Check diagonals
+        if self.board[1][1] == self.board[2][2] == self.board[3][3] == player or \
+           self.board[1][3] == self.board[2][2] == self.board[3][1] == player:
+            return True
+
+        return False
+
+    def is_draw(self):
+        # Check if all cells are filled and no winner
+        return all(self.board[i][j] != "" for i in range(1, 4) for j in range(1, 4)) and not self.check_winner(
+            "Team1") and not self.check_winner("Team2")
+
+    def play_game(self):
+        # Placeholder for the main game loop
+        pass
+
+
+class GameClient:
+    def __init__(self):
+        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client_socket.connect((HOST, PORT))
+
+    def listen_for_messages(self):
+        """
+        Listens for messages from the server.
+        """
+        while True:
+            message = self.client_socket.recv(1024).decode()
+            if message:
+                data = json.loads(message)
+                action = data.get("action")
+
+                if action == "update":
+                    self.display_board(data["board"])
+                elif action == "restart":
+                    self.display_board(data["board"])
+                    print(data["message"])
+                elif action == "end":
+                    # Display the final board and the game outcome
+                    self.display_board(data["board"])
+                    print(data["message"])
+                    break
+
+    def display_board(self, board):
+        """
+        Displays the game board in a more visually appealing format.
+        """
+        print("\nTic-Tac-Toe Board:")
+        for i, row in enumerate(board):
+            print(' | '.join(row))
+            if i < len(board) - 1:
+                print('-' * len(board) * 4)
+
+    def send_move(self, row, col):
+        """
+        Sends a move to the server.
+        """
+        message = json.dumps({"action": "move", "row": row, "col": col})
+        self.client_socket.send(message.encode())
+
+    def start(self):
+        """
+        Starts the GameClient.
+        """
+        listener_thread = threading.Thread(target=self.listen_for_messages)
+        listener_thread.start()
+
+        # Main loop for the client to interact
+        while True:
+            try:
+                row = int(input("Enter row (1-3): "))
+                col = int(input("Enter column (1-3): "))
+
+                if 1 <= row <= 3 and 1 <= col <= 3:
+                    self.send_move(row, col)
+                else:
+                    print("Invalid input. Please enter a number between 1 and 3.")
+            except ValueError:
+                print("Invalid input. Please enter a number.")
+
+
+class GameServer:
+    def __init__(self):
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.bind((HOST, PORT))
+        self.server.listen()
+        self.game = TicTacToe()  # Initialize the TicTacToe game
+        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client_socket.connect((HOST, PORT))
+        print(f"Server listening on {HOST}:{PORT}")
+
+        # This will store the client sockets
+        self.clients = []
+
+    def handle_game_logic(self, message, client_socket):
+        """
+        Process and respond to game-related messages.
+        """
+        data = json.loads(message)
+        action = data.get("action")
+
+        if action == "move":
+            player = data.get("player")
+            row = data.get("row")
+            col = data.get("col")
+            response = self.game.make_move(player, row, col)
+
+            if response == "win":
+                # Notify all clients about the win
+                self.broadcast(json.dumps({
+                    "action": "end",
+                    "message": f"Player {player} wins!",
+                    "board": self.game.board
+                }))
+            elif self.game.is_draw():
+                # Notify all clients about the draw
+                self.broadcast(json.dumps({
+                    "action": "end",
+                    "message": "Game is a draw!",
+                    "board": self.game.board
+                }))
+            else:
+                # Broadcast game state update to all clients
+                self.broadcast(json.dumps({
+                    "action": "update",
+                    "board": self.game.board,
+                    "status": response
+                }))
+        if action == "restart":
+            self.game = TicTacToe()  # Reset the game
+            self.broadcast(json.dumps({
+                "action": "restart",
+                "message": "Game has been restarted",
+                "board": self.game.board
+            }))
+
+    def broadcast(self, message):
+        """
+        Broadcasts a message to all clients.
+        """
+        for client in self.clients:
+            client.send(message.encode())
+
+    def handle_client(self, client_socket):
+        """
+        Handles the connection with the client.
+        """
+        while True:
+            try:
+                message = client_socket.recv(1024).decode()
+                if message:
+                    print(f"Received message: {message}")
+                    self.handle_game_logic(message)
+            except Exception as e:
+                print(f"An error occurred: {e}")
+                self.clients.remove(client_socket)
+                client_socket.close()
+                break
+
+    def start(self):
+        """
+        Starts the GameServer.
+        """
+        while True:
+            client_socket, addr = self.server.accept()
+            print(f"Accepted connection from {addr}")
+            self.clients.append(client_socket)
+
+            client_handler = threading.Thread(target=self.handle_client, args=(client_socket,))
+            client_handler.start()
+
+
+if __name__ == "__main__":
+    game_server = GameServer()
+    game_server.start()
+
+#if __name__ == "__main__":
+#        client = GameClient()
+#        client.start()
+
+
+
+
+"""
+def start_client():
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((HOST, PORT))
+        # Placeholder for client-server communication logic
+        pass
+"""
+
+"""
+def start_server():
+
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind((HOST, PORT))
+    server.listen()
+
+    print(f"Server listening on {HOST}:{PORT}")
+
+    while True:
+        client_socket, addr = server.accept()
+        print(f"Accepted connection from {addr}")
+        client_handler = threading.Thread(target=GameServer.handle_client, args=(client_socket,))
+        client_handler.start()
+"""
