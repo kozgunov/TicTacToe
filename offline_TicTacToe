@@ -1,0 +1,137 @@
+import socket
+import threading
+import json
+from game import TicTacToe
+import re
+import random
+import tkinter as tk
+from tkinter import messagebox
+import pandas as pd
+
+data = pd.read_excel('TicTacToe.xls')
+
+class TicTacToeApp:
+    def __init__(self, master):
+        self.master = master
+        self.master.title('Tic Tac Toe')
+        self.current_player ='X'
+        self.board = [['' for _ in range(4)] for _ in range(4)]  # Adjusted for additional non-playing grids
+        self.buttons = [[None for _ in range(4)] for _ in range(4)]  # Adjusted for additional non-playing grids
+        self.o_wins = 0
+        self.x_wins = 0
+        self.master.geometry('780x780')
+
+        self.initialize_board_with_labels()
+
+    def updates(self):
+        random_values_col1 = data.iloc[:, 0].dropna().sample(3).tolist()
+        random_values_col2 = data.iloc[:, 1].dropna().sample(2).tolist()
+        random_values_col3 = data.iloc[:, 2].dropna().sample(1).tolist()
+        return [random_values_col1, random_values_col2, random_values_col3]
+
+    def initialize_board_with_labels(self):
+        random_values_col1, random_values_col2, random_values_col3 = self.updates()
+
+        if len(random_values_col1[0]) >= 17:
+            middle_index = len(random_values_col1[0]) // 2
+            random_values_col1[0] = random_values_col1[0][:middle_index] + '\n' + random_values_col1[0][middle_index:]
+        if len(random_values_col1[1]) >= 17:
+            middle_index = len(random_values_col1[1]) // 2
+            random_values_col1[1] = random_values_col1[1][:middle_index] + '\n' + random_values_col1[1][middle_index:]
+        if len(random_values_col1[2]) >= 17:
+            middle_index = len(random_values_col1[2]) // 2
+            random_values_col1[2] = random_values_col1[2][:middle_index] + '\n' + random_values_col1[2][middle_index:]
+        if len(random_values_col2[0]) >= 17:
+            middle_index = len(random_values_col2[0]) // 2
+            random_values_col2[0] = random_values_col2[0][:middle_index] + '\n' + random_values_col2[0][middle_index:]
+        if len(random_values_col2[1]) >= 17:
+            middle_index = len(random_values_col2[1]) // 2
+            random_values_col2[1] = random_values_col2[1][:middle_index] + '\n' + random_values_col2[1][middle_index:]
+        if len(random_values_col3[0]) >= 17:
+            middle_index = len(random_values_col3[0]) // 2
+            random_values_col3[0] = random_values_col3[0][:middle_index] + '\n' + random_values_col3[0][middle_index:]
+
+        self.board[0][0] = "Tic Tac Toe"
+        self.board[0][1] = random_values_col1[0]
+        self.board[0][2] = random_values_col1[1]
+        self.board[0][3] = random_values_col1[2]
+        self.board[1][0] = random_values_col2[0]
+        self.board[2][0] = random_values_col3[0]
+        self.board[3][0] = random_values_col2[1]
+        for i in range(4):
+            for j in range(4):
+                if i == 0 and j == 0:
+                    label = tk.Label(self.master, text=self.board[0][0], font=('normal', 12), width=20, height=10)
+                    label.grid(row=i, column=j)
+                elif i == 0 and j == 1:
+                    label = tk.Label(self.master, text=self.board[0][1], font=('normal', 12), width=20, height=10)
+                    label.grid(row=i, column=j)
+                elif i == 0 and j == 2:
+                    label = tk.Label(self.master, text=self.board[0][2], font=('normal', 12), width=20, height=10)
+                    label.grid(row=i, column=j)
+                elif i == 0 and j == 3:
+                    label = tk.Label(self.master, text=self.board[0][3], font=('normal', 12), width=20, height=10)
+                    label.grid(row=i, column=j)
+                elif i == 1 and j == 0:
+                    label = tk.Label(self.master, text=self.board[1][0], font=('normal', 12), width=20, height=10)
+                    label.grid(row=i, column=j)
+                elif i == 2 and j == 0:
+                    label = tk.Label(self.master, text=self.board[2][0], font=('normal', 12), width=20, height=10)
+                    label.grid(row=i, column=j)
+                elif i == 3 and j == 0:
+                    label = tk.Label(self.master, text=self.board[3][0], font=('normal', 12), width=20, height=10)
+                    label.grid(row=i, column=j)
+                else:
+                    self.buttons[i][j] = tk.Button(self.master, text='', font=('normal', 12), width=20, height=10, command=lambda i=i, j=j: self.make_move(i, j))
+                    self.buttons[i][j].grid(row=i, column=j)
+
+    def make_move(self, i, j):
+        if not self.board[i][j] and self.current_player:
+            self.buttons[i][j]['text'] = self.current_player
+            self.board[i][j] = self.current_player
+            if self.check_winner(self.current_player):
+                messagebox.showinfo("Game Over", f"'{self.current_player}' wins!")
+                self.update_score(self.current_player)
+                self.reset_board()
+            elif self.is_board_full():
+                messagebox.showinfo("Game Over", "It's a draw!")
+                self.reset_board()
+            self.current_player = 'O' if self.current_player == 'X' else 'X'
+
+    def check_winner(self, player):
+        for i in range(1, 4):
+            if self.board[i][1] == self.board[i][2] == self.board[i][3] != '':
+                return self.board[i][1]
+            if self.board[1][i] == self.board[2][i] == self.board[3][i] != '':
+                return self.board[1][i]
+        if self.board[1][1] == self.board[2][2] == self.board[3][3] != '':
+            return self.board[1][1]
+        if self.board[3][1] == self.board[2][2] == self.board[1][3] != '':
+            return self.board[3][1]
+        return False
+
+    def update_score(self, player):
+        if player == 'X':
+            self.x_wins += 1
+        else:
+            self.o_wins += 1
+        self.master.title(f'Tic Tac Toe - X Wins: {self.x_wins}, O Wins: {self.o_wins}')
+
+    def reset_board(self):
+        # Resetting each button's text in the GUI
+        for i in range(1, 4):
+            for j in range(1, 4):
+                self.buttons[i][j].config(text='')
+        self.board = [['' for _ in range(4)] for _ in range(4)]
+        self.current_player = 'X'
+        self.initialize_board_with_labels()
+
+    def is_board_full(self):
+        # Check if all cells except for the 0th row and column are filled
+        return all(self.board[i][j] != '' for i in range(1, 4) for j in range(1, 4))
+
+
+if __name__ == '__main__':
+    root = tk.Tk()
+    app = TicTacToeApp(root)
+    root.mainloop()
