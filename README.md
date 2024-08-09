@@ -49,10 +49,9 @@ Welcome to Tic-Tac-Toe - Football Edition, a unique twist on the classic Tic-Tac
 - **Timer**: A countdown timer that adds pressure to the gameplay.
 
 ## Example
-    
-    `
-    ![Game Screenshot](C:/Users/user/Desktop/Screenshot_10.png)
-    `
+       
+![Game Screenshot](C:/Users/user/Desktop/Screenshot_10.png)
+
 ## Contributing
 
 We welcome contributions! Please fork the repository and submit pull requests.
