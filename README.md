@@ -50,7 +50,7 @@ Welcome to Tic-Tac-Toe - Football Edition, a unique twist on the classic Tic-Tac
 
 ## Example
        
-![Game Screenshot](image/C:/Users/user/Desktop/Screenshot_10.png)
+![Game Screenshot](TicTacToe_2/Screenshot_1.png)
 
 ## Contributing
 
