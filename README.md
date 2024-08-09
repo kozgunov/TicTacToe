@@ -18,8 +18,8 @@ Welcome to Tic-Tac-Toe - Football Edition, a unique twist on the classic Tic-Tac
 
 1. **Clone the Repository**:
     ```sh
-    git clone https://github.com/kozgunov/TicTacToe/edit/main/README.mdyourusername/TicTacToe-FootballEdition.githttps://github.com/kozgunov/TicTacToe/tree/main/TicTacToe_2
-    cd TicTacToe-FootballEdition
+    git clone https://github.com/kozgunov/TicTacToe.git
+    cd TicTacToe/TicTacToe_2
     ```
 
 2. **Install the Required Dependencies**:
@@ -49,9 +49,10 @@ Welcome to Tic-Tac-Toe - Football Edition, a unique twist on the classic Tic-Tac
 - **Timer**: A countdown timer that adds pressure to the gameplay.
 
 ## Example
-
-![Game Screenshot](Screenshot_1.png)
-
+    
+    ```markdown
+    ![Game Screenshot](C:/Users/user/Desktop/Screenshot_10.png)
+    ```
 ## Contributing
 
 We welcome contributions! Please fork the repository and submit pull requests.
