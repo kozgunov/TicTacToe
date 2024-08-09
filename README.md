@@ -1,4 +1,4 @@
-# Tic Tac Toe - Football Edition
+# Tic Tac Toe - Football Edition(https://github.com/kozgunov/TicTacToe/blob/main/TicTacToe_2/tic-tac-toe_2v2.py)
 
 ## Introduction
 
