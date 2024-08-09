@@ -1,16 +1,16 @@
-# [Tic Tac Toe - Football Edition](https://github.com/kozgunov/TicTacToe/blob/main/TicTacToe_2/tic-tac-toe_2v2.py)
+# [Tic-Tac-Toe - Football Edition](https://github.com/kozgunov/TicTacToe/blob/main/TicTacToe_2/tic-tac-toe_2v2.py)
 
 ## Introduction
 
-Welcome to Tic Tac Toe - Football Edition, a unique twist on the classic Tic Tac Toe game where players not only play to win but also engage with football trivia. This game adds an exciting layer of interactivity by incorporating football clubs, countries, and features randomly, and players must guess the footballer that fits the given criteria.
+Welcome to Tic-Tac-Toe - Football Edition, a unique twist on the classic Tic-Tac-Toe game where players not only play to win but also engage with football trivia. This game adds an exciting layer of interactivity by incorporating football clubs, countries, and features randomly, and players must guess the footballer that fits the given criteria.
 
 ## Features
 
-- **4x4 Grid**: An extended grid for more strategic gameplay.
+- **3x3 Grid**: An extended grid for more strategic gameplay.
 - **Approve Moves**: Players can propose a move and either accept or decline it.
-- **Animations**: Fun animations to celebrate wins, losses, and draws.
+- **Animations**: Fun different animations to celebrate wins, losses, and draws.
 - **Search Functionality**: Search for footballers directly from the game and view their details from various online sources.
-- **Timer**: Add a timer to enhance the challenge.
+- **Timer**: Add a timer to enhance the challenge.(it's under comments)
 - **Full-Screen Mode**: Immersive full-screen gameplay experience.
 - **Interactive GUI**: Built with Tkinter for a smooth and responsive user interface.
 
@@ -18,7 +18,7 @@ Welcome to Tic Tac Toe - Football Edition, a unique twist on the classic Tic Tac
 
 1. **Clone the Repository**:
     ```sh
-    git clone https://github.com/yourusername/TicTacToe-FootballEdition.git
+    git clone https://github.com/kozgunov/TicTacToe/edit/main/README.mdyourusername/TicTacToe-FootballEdition.git
     cd TicTacToe-FootballEdition
     ```
 
