@@ -18,14 +18,14 @@ Welcome to Tic-Tac-Toe - Football Edition, a unique twist on the classic Tic-Tac
 
 1. **Clone the Repository**:
     ```sh
-    git clone https://github.com/kozgunov/TicTacToe/edit/main/README.mdyourusername/TicTacToe-FootballEdition.git
+    git clone https://github.com/kozgunov/TicTacToe/edit/main/README.mdyourusername/TicTacToe-FootballEdition.githttps://github.com/kozgunov/TicTacToe/tree/main/TicTacToe_2
     cd TicTacToe-FootballEdition
     ```
 
 2. **Install the Required Dependencies**:
     Make sure you have Python installed. Then, install the required libraries using pip:
     ```sh
-    pip install pandas openpyxl
+    pip install pandas openpyxl 
     ```
 
 ## Usage
