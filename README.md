@@ -25,19 +25,19 @@ Welcome to Tic-Tac-Toe - Football Edition, a unique twist on the classic Tic-Tac
 2. **Install the Required Dependencies**:
     Make sure you have Python installed. Then, install the required libraries using pip:
     ```sh
-    pip install pandas openpyxl 
+    pip install pandas openpyxl tkinter webbrowser
     ```
 
 ## Usage
 
 1. **Run the Game**:
     ```sh
-    python tic-tac-toe_2.py
+    python tic-tac-toe_2v2.py
     ```
 
 2. **Game Instructions**:
     - **Starting the Game**: The game will start in full-screen mode. Press `Escape` to exit full-screen.
-    - **Making Moves**: Click on the grid to propose a move. Use the "Accept" and "Decline" buttons to confirm or reject the move.
+    - **Making Moves**: Click on the grid to propose a move. Use the "Accept" and "Decline" buttons to confirm or reject the move from the referee side.
     - **Searching for Footballers**: Click the "Search Footballer" button and enter the footballer's name to search for their details online.
     - **Using the Timer**: Set the desired duration in minutes in the timer input field, then use the "Start", "Stop", and "Reset" buttons to control the timer.
 
@@ -50,7 +50,7 @@ Welcome to Tic-Tac-Toe - Football Edition, a unique twist on the classic Tic-Tac
 
 ## Example
 
-![Game Screenshot](screenshot.png)
+![Game Screenshot](screenshot_1.png)
 
 ## Contributing
 
@@ -58,11 +58,11 @@ We welcome contributions! Please fork the repository and submit pull requests.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+No license is here. I'd glad to see your stars under the project) 
 
 ## Contact
 
-For any inquiries or feedback, feel free to contact us at [your-email@example.com](mailto:your-email@example.com).
+For any inquiries or feedback, feel free to contact us at [Nikita](kozgunovn@mail.ru).
 
 ---
 
