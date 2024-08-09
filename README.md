@@ -50,9 +50,9 @@ Welcome to Tic-Tac-Toe - Football Edition, a unique twist on the classic Tic-Tac
 
 ## Example
     
-    ```
+    `
     ![Game Screenshot](C:/Users/user/Desktop/Screenshot_10.png)
-    ```
+    `
 ## Contributing
 
 We welcome contributions! Please fork the repository and submit pull requests.
