@@ -50,7 +50,7 @@ Welcome to Tic-Tac-Toe - Football Edition, a unique twist on the classic Tic-Tac
 
 ## Example
     
-    ```markdown
+    ```
     ![Game Screenshot](C:/Users/user/Desktop/Screenshot_10.png)
     ```
 ## Contributing
